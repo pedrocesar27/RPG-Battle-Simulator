@@ -4,7 +4,6 @@ public class Character {
     
     //Atributos de cada personagem
     protected String name;
-    protected int level;
     protected int maxHp;
     protected int hp;
     protected int attack;
@@ -13,9 +12,8 @@ public class Character {
     protected Random rng = new Random(); // Random
 
     // Metodo Construtor
-    public Character(String name, int level, int maxHp, int hp, int attack, int defense) {
+    public Character(String name, int maxHp, int hp, int attack, int defense) {
         this.name = name;
-        this.level = level;
         this.maxHp = maxHp;
         this.hp = hp;
         this.attack = attack;
