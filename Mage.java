@@ -28,14 +28,14 @@ public class Mage extends Character {
             System.out.println("Action for " + this.name + ": [1] Attack  [2] Create Magic Barrier");
             String choice = in.nextLine().trim();
             if (choice.equals("2")) {
-                System.out.println(this.name + " conjures a shimmering magic barrier! 🛡️");
+                System.out.println(this.name + " conjures a shimmering magic barrier!");
                 this.barrierActive = true;
                 return; // Encerra o turno após criar a barreira
             }
         } else { 
             // Se estiver com pouca vida, tem uma chance (60%) de criar a barreira
             if (this.hp < this.maxHp / 2 && rng.nextDouble() < 0.6) {
-                System.out.println(this.name + " conjures a shimmering magic barrier! 🛡️");
+                System.out.println(this.name + " conjures a shimmering magic barrier!");
                 this.barrierActive = true;
                 return; // Encerra o turno
             }
