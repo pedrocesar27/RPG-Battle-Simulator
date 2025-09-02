@@ -9,6 +9,23 @@ public class Assassin extends Character {
     }
     
     /**
+     * O ataque básico do Assassino agora tem 15% de chance de envenenar o alvo.
+     */
+    @Override
+    public void basicAttack(Character target) {
+        super.basicAttack(target); // Executa o ataque básico da classe mãe
+
+        // Após o ataque, verifica se o alvo ainda está vivo para aplicar o veneno
+        if (target.isAlive()) {
+            // 15% de chance de aplicar o status "Poison"
+            if (rng.nextDouble() < 0.15) { 
+                System.out.println(this.name + "'s attack was venomous!");
+                // Aplica o veneno por 3 turnos
+                target.applyStatusEffect("Poison", 3); 
+            }
+        }
+    }
+    /**
      * Define a ação do Assassino durante seu turno de batalha
      * Sua única ação é um ataque focado em um único alvo
      */

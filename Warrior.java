@@ -5,7 +5,7 @@ public class Warrior extends Character {
 
     // Construtor para criar um novo Guerreiro com um nome
     public Warrior(String name) {
-        super(name, 120, 18, 8); // Define os atributos base: HP alto, ataque e defesa moderados
+        super(name, 120, 20, 8); // Define os atributos base: HP alto, ataque e defesa moderados
     }
 
     /**

@@ -10,6 +10,19 @@ public abstract class Character {
     protected int defense;      // Pontos de defesa
     protected Random rng = new Random(); // Gerador de números aleatórios para variações
 
+    // Atributos para o sistema de Nível e Experiência
+    protected int level = 1;
+    protected int experience = 0;
+    protected int xpValue = 25; // XP que este personagem concede ao ser derrotado
+
+    // Atributos para efeitos de status (Buffs/Debuffs)
+    // A String é o nome do efeito ("Poison", "Stun"), o Integer é a duração em turnos.
+    protected Map<String, Integer> statusEffects = new HashMap<>();
+
+    // Atributos para tempo de recarga de habilidades (Cooldown)
+    // A String é o nome da habilidade ("GroupHeal"), o Integer é a contagem de turnos.
+    protected Map<String, Integer> cooldowns = new HashMap<>();
+
     /**
      * Construtor para criar um novo personagem com seus atributos iniciais
      */
@@ -91,5 +104,122 @@ public abstract class Character {
      */
     public String status() {
         return String.format("%s [%s] HP:%d/%d", name, getClass().getSimpleName(), hp, maxHp);
+    }
+
+    /**
+     * Adiciona experiência ao personagem e verifica se ele subiu de nível
+     * @param xpGained A quantidade de experiência ganha
+     */
+    public void addExperience(int xpGained) {
+        this.experience += xpGained;
+        System.out.println(this.name + " gained " + xpGained + " XP!");
+        // A cada 100 de XP, o personagem sobe de nível
+        if (this.experience >= 100) {
+            this.experience -= 100;
+            levelUp();
+        }
+    }
+
+    /**
+     * Aumenta o nível e os atributos do personagem.
+     */
+    private void levelUp() {
+        this.level++;
+        // Aumenta os atributos base a cada nível
+        this.maxHp += 10;
+        this.attack += 2;
+        this.defense += 1;
+        this.hp = this.maxHp; // Cura totalmente ao subir de nível
+        System.out.println(this.name + " has reached Level " + this.level + "! Stats increased!");
+    }
+
+    /**
+     * Aplica um efeito de status a este personagem.
+     * @param effect O nome do efeito (ex: "Poison").
+     * @param duration A duração em número de turnos.
+     */
+    public void applyStatusEffect(String effect, int duration) {
+        statusEffects.put(effect, duration);
+        System.out.println(this.name + " is now affected by " + effect + "!");
+    }
+
+    /**
+     * Processa todos os efeitos de status ativos no início do turno do personagem.
+     * @return true se o personagem puder agir, false se estiver atordoado (Stun).
+     */
+    public boolean processStatusEffects() {
+        // Usa um novo mapa para evitar problemas ao modificar o mapa durante a iteração
+        Map<String, Integer> nextEffects = new HashMap<>();
+        boolean canAct = true;
+
+        for (Map.Entry<String, Integer> entry : statusEffects.entrySet()) {
+            String effect = entry.getKey();
+            int duration = entry.getValue();
+
+            switch (effect) {
+                case "Poison":
+                    // NOVA LÓGICA: Dano de veneno agora é 30% da vida máxima.
+                    int poisonDmg = (int) (this.maxHp * 0.30); 
+                    this.hp = Math.max(0, this.hp - poisonDmg); // Garante que a vida não fique negativa
+                    System.out.println(this.name + " takes " + poisonDmg + " damage from Poison!");
+                    break;
+                case "Stun":
+                    System.out.println(this.name + " is Stunned and cannot act!");
+                    canAct = false;
+                    break;
+            }
+
+            if (duration - 1 > 0) {
+                nextEffects.put(effect, duration - 1);
+            } else {
+                System.out.println(effect + " has worn off from " + this.name + ".");
+            }
+        }
+        this.statusEffects = nextEffects; // Atualiza o mapa de efeitos
+        return canAct;
+    }
+
+    /**
+     * Coloca uma habilidade em tempo de recarga.
+     * @param abilityName O nome da habilidade.
+     * @param duration A duração do cooldown em turnos.
+     */
+    public void setCooldown(String abilityName, int duration) {
+        cooldowns.put(abilityName, duration);
+    }
+    
+    /**
+     * Verifica se uma habilidade está em tempo de recarga.
+     * @param abilityName O nome da habilidade.
+     * @return true se estiver em cooldown, false caso contrário.
+     */
+    public boolean isOnCooldown(String abilityName) {
+        return cooldowns.getOrDefault(abilityName, 0) > 0;
+    }
+
+    /**
+     * Reduz a contagem de todos os cooldowns ativos em 1.
+     * Deve ser chamado no início do turno do personagem.
+     */
+    public void tickCooldowns() {
+        for (String key : new ArrayList<>(cooldowns.keySet())) {
+            int timeLeft = cooldowns.get(key);
+            if (timeLeft - 1 <= 0) {
+                cooldowns.remove(key);
+            } else {
+                cooldowns.put(key, timeLeft - 1);
+            }
+        }
+    }
+
+    public int getXpValue() {
+        return xpValue;
+    }
+
+    public void revive() {
+        if (!isAlive()) {
+            this.hp = 25; // Revive com 1 de HP
+            System.out.println(this.name + " has been revived!");
+        }
     }
 }

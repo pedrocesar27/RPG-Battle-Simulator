@@ -39,6 +39,8 @@ public class Battle {
             System.out.println("\nThe enemy team is faster and attacks first!");
         }
 
+        // Variável para armazenar o XP total da batalha
+        int totalXpGained = 0;
         int round = 1;
         // O loop continua enquanto ambos os times tiverem pelo menos um membro vivo
         while (isTeamAlive(teamA) && isTeamAlive(teamB)) {
@@ -63,6 +65,9 @@ public class Battle {
         System.out.println("\n--- Battle Result ---");
         if (isTeamAlive(teamA)) {
             System.out.println("You win!");
+            for (Character hero : alive(teamA)) {
+                hero.addExperience(totalXpGained);
+            }
         } else {
             System.out.println("Defeat...");
         }
@@ -83,6 +88,11 @@ public class Battle {
             if (!actor.isAlive() || !isTeamAlive(opposingTeam)) {
                 continue; // Pula se o ator morreu ou se a equipe inimiga foi derrotada
             }
+            System.out.println(); // Linha em branco para espaçamento
+            if (!actor.processStatusEffects()) {
+                continue; // Pula o turno se o personagem estiver atordoado (Stun)
+            }
+            actor.tickCooldowns();
 
             if (isPlayerTurn) {
                 // Jogador age normalmente, chamando o método takeTurn do personagem
