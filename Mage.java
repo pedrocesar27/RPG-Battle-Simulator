@@ -37,14 +37,14 @@ public class Mage extends Character {
 
             String choice = in.nextLine().trim();
             if (choice.equals("2") && !isOnCooldown(BARRIER_ABILITY)) {
-                System.out.println(this.name + " conjures a shimmering magic barrier! 🛡️");
+                System.out.println(this.name + " conjures a shimmering magic barrier!");
                 this.barrierActive = true;
                 setCooldown(BARRIER_ABILITY, 3); // Coloca a barreira em cooldown por 3 turnos
                 return;
             }
         } else { // IA
             if (!isOnCooldown(BARRIER_ABILITY) && this.hp < this.maxHp / 2 && rng.nextDouble() < 0.6) {
-                System.out.println(this.name + " conjures a shimmering magic barrier! 🛡️");
+                System.out.println(this.name + " conjures a shimmering magic barrier!");
                 this.barrierActive = true;
                 setCooldown(BARRIER_ABILITY, 3);
                 return;

@@ -12,7 +12,7 @@ public class Main {
         System.out.println(" WELCOME TO THE RPG BATTLE SIMULATOR ");
         System.out.println("======================================");
 
-        // 2. CRIAÇÃO DO GRPO DO JOGADOR
+        // 2. CRIAÇÃO DO GRUPO DO JOGADOR
         // Escolha de cada personagem da equipe do jogador
         System.out.println("\nChoose your Heroes!");
         List<Character> playerParty = new ArrayList<>();

@@ -31,7 +31,7 @@ public class Healer extends Character {
                 groupHeal(allies);
                 return;
             }
-        } else { // IA
+        } else {
             if (!isOnCooldown(GROUP_HEAL_ABILITY)) {
                 for (Character ally : allies) {
                     if (ally.isAlive() && ally.hp < ally.maxHp / 2) {
